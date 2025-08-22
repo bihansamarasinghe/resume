@@ -51,7 +51,27 @@
         <a href="#contact" class="hover:text-slate-900 transition">Contact</a>
         <a href="#" class="ml-3 inline-flex items-center gap-2 bg-brand-500 text-white px-4 py-2 rounded-lg shadow hover:scale-105 transition transform">Resume</a>
       </nav>
-      <button class="md:hidden p-2 rounded-lg bg-white/60 backdrop-blur-sm shadow">☰</button>
+      <button id="mobile-menu-button" aria-expanded="false" aria-controls="mobile-menu" class="md:hidden p-2 rounded-lg bg-white/60 backdrop-blur-sm shadow">
+        <span class="sr-only">Open main menu</span>
+        <svg id="hamburger-open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="hamburger-close" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- Mobile menu (hidden on md+) -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white/70 backdrop-blur-sm shadow-md rounded-b-lg mx-4 mt-2">
+      <nav class="px-4 py-3 flex flex-col gap-2">
+        <a href="#about" class="py-2 px-3 rounded hover:bg-slate-50">About</a>
+        <a href="#projects" class="py-2 px-3 rounded hover:bg-slate-50">Work</a>
+        <a href="#contact" class="py-2 px-3 rounded hover:bg-slate-50">Contact</a>
+        <a href="#" class="mt-2 inline-flex items-center gap-2 bg-brand-500 text-white px-3 py-2 rounded-lg shadow">Resume</a>
+      </nav>
+    </div>
+
     </header>
 
     <main class="max-w-6xl mx-auto px-6">
@@ -202,4 +222,21 @@
     </main>
 
   </body>
+  <script>
+    // Mobile menu toggle
+    (function(){
+      const btn = document.getElementById('mobile-menu-button');
+      const menu = document.getElementById('mobile-menu');
+      const openIcon = document.getElementById('hamburger-open');
+      const closeIcon = document.getElementById('hamburger-close');
+      if(!btn || !menu) return;
+      btn.addEventListener('click', function(){
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        menu.classList.toggle('hidden');
+        openIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
+      });
+    })();
+  </script>
 </html>
