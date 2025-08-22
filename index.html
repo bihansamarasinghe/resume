@@ -62,8 +62,8 @@
       </button>
     </header>
 
-    <!-- Mobile menu (hidden on md+) -->
-    <div id="mobile-menu" class="md:hidden hidden bg-white/70 backdrop-blur-sm shadow-md rounded-b-lg mx-4 mt-2">
+  <!-- Mobile menu (hidden on md+) -->
+  <div id="mobile-menu" class="md:hidden max-h-0 opacity-0 overflow-hidden bg-white/70 backdrop-blur-sm shadow-md rounded-b-lg mx-4 mt-2 transition-all duration-300">
       <nav class="px-4 py-3 flex flex-col gap-2">
         <a href="#about" class="py-2 px-3 rounded hover:bg-slate-50">About</a>
         <a href="#projects" class="py-2 px-3 rounded hover:bg-slate-50">Work</a>
@@ -71,8 +71,7 @@
         <a href="#" class="mt-2 inline-flex items-center gap-2 bg-brand-500 text-white px-3 py-2 rounded-lg shadow">Resume</a>
       </nav>
     </div>
-
-    </header>
+    
 
     <main class="max-w-6xl mx-auto px-6">
       <!-- Hero -->
@@ -223,19 +222,61 @@
 
   </body>
   <script>
-    // Mobile menu toggle
     (function(){
       const btn = document.getElementById('mobile-menu-button');
       const menu = document.getElementById('mobile-menu');
       const openIcon = document.getElementById('hamburger-open');
       const closeIcon = document.getElementById('hamburger-close');
       if(!btn || !menu) return;
+
+      function openMenu(){
+        btn.setAttribute('aria-expanded', 'true');
+        openIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+        menu.classList.remove('max-h-0','opacity-0');
+        menu.classList.add('max-h-96','opacity-100');
+        // trap focus
+        const focusable = menu.querySelectorAll('a,button');
+        if(focusable.length) focusable[0].focus();
+        document.addEventListener('keydown', onKeyDown);
+      }
+
+      function closeMenu(){
+        btn.setAttribute('aria-expanded', 'false');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        menu.classList.remove('max-h-96','opacity-100');
+        menu.classList.add('max-h-0','opacity-0');
+        btn.focus();
+        document.removeEventListener('keydown', onKeyDown);
+      }
+
+      function onKeyDown(e){
+        if(e.key === 'Escape') closeMenu();
+        if(e.key === 'Tab'){
+          // simple focus trap: keep tab within menu when open
+          const focusable = Array.from(menu.querySelectorAll('a,button')).filter(Boolean);
+          if(focusable.length === 0) return;
+          const first = focusable[0];
+          const last = focusable[focusable.length -1];
+          if(e.shiftKey && document.activeElement === first){
+            e.preventDefault();
+            last.focus();
+          } else if(!e.shiftKey && document.activeElement === last){
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
       btn.addEventListener('click', function(){
         const expanded = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!expanded));
-        menu.classList.toggle('hidden');
-        openIcon.classList.toggle('hidden');
-        closeIcon.classList.toggle('hidden');
+        if(expanded) closeMenu(); else openMenu();
+      });
+
+      // close on link click
+      menu.querySelectorAll('a').forEach(link=>{
+        link.addEventListener('click', ()=> closeMenu());
       });
     })();
   </script>
