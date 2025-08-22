@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: write   # 👈 Add this so the action can push to gh-pages
+
 jobs:
   build:
     runs-on: ubuntu-latest
